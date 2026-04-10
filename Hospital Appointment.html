@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<head>
+
+<style>
+
+        * {
+    box-sizing: border-box;
+}
+        body{
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            background-color: #ffffff;
+            margin: 0px;
+        }
+        #header
+        {
+            height: 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            border-bottom:0px;
+            border-color: black;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+
+
+        }
+        #maincontent{   
+             flex:1;
+            display: flex;
+            gap: 8px;          
+            padding:2px;       
+            background: #f5f7fa;
+        }
+        
+        #sidenavigation{ 
+            
+            flex: 1;
+            border:0px solid grey;
+            width: auto;
+            display: block;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            
+        }
+        #sidenavigationIcon{                 
+            border:0px solid grey;
+            display: none;
+            width: 30px;
+            
+        }
+        #calendarTable{
+            /*width: 80%;
+            height: 100%;
+            border: 1px solid grey;*/
+            display: flex;
+            flex: 9;
+            flex-direction: column;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        #dashboard{
+            display: flex;
+            flex: 9;
+            flex-direction: column;
+            display: none;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        #Calendar {
+            width: 100%;
+            height: 100%;
+             border: 1px solid grey;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        th{
+            text-align: center;
+            height: auto;  
+             border: 1px solid grey;        
+        }
+        td
+        {
+            position: relative;
+            padding: 10px;
+            vertical-align: top; 
+            border: 1px solid grey; 
+        }
+        .box{
+            width: 100%;
+            height: 100%;
+            margin: auto;
+            }
+        
+        #scheduleAppointment{     
+            position: fixed;          
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            
+            z-index: 1000;                
+
+            width: 40%;
+            min-height: 50%;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        
+        #scheduleAppointment h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        
+        #scheduleAppointment input {
+            width: 100%; 
+            height: 35px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .date-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .button-row button {
+            flex: 1;
+            height: 35px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: #f8f8f8;
+            border-radius: 4px;
+        }
+
+        .container{
+            width:100%;
+            min-height:fit-content;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin:auto;
+            border-radius:px;
+            background:rgb(255, 255, 255);
+        }
+
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0,0,0,0.4);
+            z-index: 999;
+
+            display: none;
+        }
+
+        .icon-btn {
+            background-color: #ffffff; 
+            color: rgb(27, 27, 27);           
+            border: none;
+            border-radius:10%;    
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow:  0 2px 3px rgba(0,0,0,0.5);
+            
+        }
+        
+        .icon-btn:hover {
+            background-color: #97cbff;
+        }
+      
+</style>
+
+</head>
+<body>
+<div id="header">
+    <img src="Capminds_logo.png" style="height:60%;width: auto;">
+    <button type="button"style="width:150px;height:35px;color:#ffffff; background-color: #1E90FF;border:none;border-radius:5px;cursor:pointer;margin-left:auto;margin-right:auto;"onclick="showhideAppointment();">+ Book Appointment</button>
+</div>
+
+<div id="maincontent" class="container">
+
+    <div id="sidenavigation" class="box">
+        <br>
+        <br>
+        <button type="button"style="width:20px;height:20px;background-color:#ffffff;border:2px;" onclick="ShowHideIcon();">❮❮</button>
+        <br>
+        <button type="button"style="width:100%;height:35px;background-color:#ffffff;border:none;" onclick="HideShowDashboardCalendar('calendar')">&#128197;Calendar</button>
+        <button type="button"style="width:100%;height:35px;background-color:#ffffff;border:none;" onclick="HideShowDashboardCalendar('dashboard')">&#128202;Dashboard</button>
+    </div>
+    
+    <div id="sidenavigationIcon" class="box">
+        <br>
+        <br>
+        <button type="button"style="width:20px;height:20px;background-color:#ffffff;border:2px;" onclick="ShowHideIcon();">❯❯</button>
+        <br>
+        <button type="button"style="width:100%;height:35px;background-color:#ffffff;border:none;" onclick="HideShowDashboardCalendar('calendar')">&#128197;</button>
+        <button type="button"style="width:100%;height:35px;background-color:#ffffff;border:none;" onclick="HideShowDashboardCalendar('dashboard')">&#128202;</button>
+    </div>
+
+    <div id="calendarTable" class="box">
+        <div >
+            <button class="icon-btn" onclick="changeMonth(-1)">❮</button>
+            <input type="text" id="MonthYear" value="Read Only value" disabled style="width:150px;height:23px;text-align: center;">
+            <button class="icon-btn" onclick="changeMonth(1)">❯</button>
+            <button type="button"style="width:60px;height:23px;cursor: pointer;" onclick="goToToday()">Today</button>
+            <input type="dropdow" value="Month" disabled style="width:60px;height:23px;">
+        </div>
+        <div style="justify-content:center;align-content: center;"> 
+            <label style="color: #1E90FF;display: block;text-align: center;">Ramesh Kumar</label>
+        </div>
+        <table id="Calendar" style="width: 100%;"> 
+            <thead><tr><th>Sunday</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th></tr></thead>
+            <tbody id="calendartableBody"></tbody>            
+        </table>
+    </div>
+    <div id="dashboard" class="box">
+        <div>
+            <h2>Practice Dashboard</h2>
+        <br>
+        <form>
+            <input type="text" placeholder="Patient Search" id="searchpatient" oninput="filter()" style="width:200px;height:30px;">
+            <input type="text" placeholder="Doctor Search" id="searchdoctor" oninput="filter()" style="width:200px;height:30px;"> 
+            <input type="date" id="searchdatefrom" style="width:150px;height:30px;">
+            <label>-</label>
+            <input type="date" id="searchdateto" style="width:150px;height:30px;">
+            <button type="button" style="width:80px;height:30px;color: #f8f8f8;background-color: #1E90FF;border:none;border-radius:3px;" onclick="filter()">Update</button>   
+            <button type="reset" style="width:80px;height:30px;color: #1E90FF;background-color: #ffffff;border:none;border-radius:3px;" onclick="loadAppointmentDetails()">Reset</button>
+        </form>
+        </div>
+        <br>
+        <div>
+            <table id="AppointmentDetails" style="width: 100%;">
+            <thead><tr><th>Patient</th><th>Doctor</th><th>Hospital</th><th>Specialty</th><th>Date</th><th>Time</th><th>Actions</th></tr></thead>
+            <tbody id="AppointmentDetailsBody"></tbody>            
+        </table>
+        </div>
+    </div>
+
+</div>
+
+<form id="frmBookAppoinment">
+    <div id="scheduleAppointment">    
+        <h2>Schedule Appointment</h2>
+
+        <input type="text" id="PatientName" placeholder="Patient Name">
+        <input type="text" id="DoctorName" placeholder="Doctor Name">
+        <input type="text" id="HospitalName" placeholder="Hospital Name">
+        <input type="text" id="Specialty" placeholder="Specialty">  
+
+        <div class="date-row">
+            <input type="date" id="AppointmentDate">
+            <input type="time" id="Time">
+        </div>
+
+        <input type="text" id="Reason" placeholder="Reason">            
+
+        <div class="button-row">
+            <button type="button" style="color: #f8f8f8;background-color: red;" onclick="showhideAppointment()">Cancel</button>
+            <button type="submit" style="color: #f8f8f8;background-color: #1E90FF;" onclick="Bookappointment()">Save</button>
+        </div>
+    </div>
+</form>
+
+
+    <script>
+        
+        let currentDate = new Date();
+        let Patientdetails = JSON.parse(localStorage.getItem("Patientdetails")) || [];
+        let editIndex = -1;
+        loadCalendar();
+
+        function loadCalendar()
+        {
+
+            let data = JSON.parse(localStorage.getItem("Patientdetails")) || [];
+
+            let y=currentDate.getFullYear();
+            let m=currentDate.getMonth();
+
+            /* result = data.filter(a => {
+                let d = new Date(a.AppointmentDate);
+                return d.getFullYear() === y && d.getMonth() === m;
+            });*/
+
+            document.getElementById("MonthYear").value = currentDate.toLocaleString('default',{month:'long',year:'numeric'});
+            let firstday=new Date(y,m,1).getDay();
+            let days=new Date(y,m+1,0).getDate();
+            let htmlContent ="";
+            document.getElementById("calendartableBody").innerHTML = "";
+            let counter = 1;
+            let totalRows = Math.ceil((firstday + days) / 7);
+            for(let i=0;i<totalRows;i++)
+            {                
+                htmlContent += "<tr>"
+                for(let j=0;j<7;j++)
+                {
+                    if((i === 0 && j >= firstday || i > 0) && counter <= days)
+                    {                            
+                        //htmlContent += "<td>"+counter+"</td>";
+                        //counter++;
+
+                        let date = `${y}-${String(m+1).padStart(2,'0')}-${String(counter).padStart(2,'0')}`;
+                        let appoinments = data.filter(a => a.AppointmentDate === date);
+
+                        if(appoinments.length > 0)
+                        {                                                   
+                            htmlContent += "<td><span>"+counter+"</span>";
+                            appoinments.forEach((a) => {
+                                    let originalIndex = data.findIndex(x =>
+                                        x.PatientName === a.PatientName &&
+                                        x.AppointmentDate === a.AppointmentDate &&
+                                        x.Time === a.Time
+                                    );
+                                    htmlContent += `
+                                    <div style="font-size:11px;background:green;color:#fff;margin-top:3px;padding:2px;border-radius:3px;">
+                                        ${a.PatientName} (${a.DoctorName}) - ${a.Time}
+                                        <button onclick="edit(${originalIndex})" style="background:none;border:none;cursor:pointer;padding:0;">&#9998;</button>
+                                        <button onclick="del(${originalIndex})" style="background:none;border:none;cursor:pointer;padding:0;">&#128465;</button>
+                                    </div>`;
+                                });
+                            htmlContent += "</td>";
+                        }
+                        else
+                        {
+                            htmlContent += "<td><span>"+counter+"</span></td>";
+                        }
+                        counter++;
+                    }
+                    else
+                    {
+                        htmlContent += "<td></td>";
+                    }
+
+                }
+                htmlContent += "</tr>";
+            }
+
+            document.getElementById("calendartableBody").innerHTML = htmlContent;            
+            
+            
+        }
+
+        function ShowHideIcon()
+        {
+            let sideNav = document.getElementById("sidenavigation");
+
+            if (sideNav.style.display === "none") {
+                sideNav.style.display = "block";
+                document.getElementById("sidenavigationIcon").style.display = "none";
+
+            } else {
+                sideNav.style.display = "none";
+                document.getElementById("sidenavigationIcon").style.display = "block";
+            }
+        }
+
+        function showhideAppointment()
+        {
+            let x = document.getElementById("scheduleAppointment");
+            let overlay = document.getElementById("overlay");
+
+            if (x.style.display === "none" || x.style.display === "") {
+                x.style.display = "flex";
+                overlay.style.display = "block";
+                document.getElementById("frmBookAppoinment").reset();
+
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+        function Bookappointment()
+        {
+            let PatientName = document.getElementById("PatientName").value;
+            let DoctorName = document.getElementById("DoctorName").value;
+            let HospitalName = document.getElementById("HospitalName").value;
+            let Specialty = document.getElementById("Specialty").value;
+            let AppointmentDate = document.getElementById("AppointmentDate").value;
+            let Time = document.getElementById("Time").value;
+            let Reason = document.getElementById("Reason").value;
+
+            if(PatientName===""||DoctorName===""||HospitalName===""||Specialty===""||AppointmentDate===""||Time===""){
+                alert("Please enter valid details");
+                return;
+            }
+
+            let newData = {
+                PatientName,
+                DoctorName,
+                HospitalName,
+                Specialty,
+                AppointmentDate,
+                Time,
+                Reason
+            };
+
+
+            if(editIndex > -1){
+                Patientdetails[editIndex] = newData;
+                editIndex = -1;
+                alert("Updated successfully");
+            }
+            else{
+            
+                let exists = Patientdetails.some(a =>
+                    a.PatientName === PatientName &&
+                    a.AppointmentDate === AppointmentDate &&
+                    a.Time === Time
+                );
+
+                if(exists){
+                    alert("Appointment already exists!");
+                    return;
+                }
+
+                Patientdetails.push(newData);
+                alert("Appointment booked successfully");
+            }
+
+            localStorage.setItem("Patientdetails", JSON.stringify(Patientdetails));
+            showhideAppointment();
+            loadAppointmentDetails(); 
+        }
+
+        function loadAppointmentDetails(list)
+        {
+            let data = list || JSON.parse(localStorage.getItem("Patientdetails"));
+            let appDetails = document.getElementById("AppointmentDetailsBody");
+            appDetails.innerHTML = "";
+            data.forEach((a,rownum)=>{
+                appDetails.innerHTML+=`<tr>                    
+                <td>${a.PatientName}</td>
+                <td>${a.DoctorName}</td>
+                <td>${a.HospitalName}</td>
+                <td>${a.Specialty}</td>
+                <td>${a.AppointmentDate}</td>
+                <td>${a.Time}</td>
+                <td><button onclick="edit(${rownum})" style="background:none;border:none;cursor:pointer;padding:0;">&#9998;</button><button onclick="del(${rownum})" style="background:none;border:none;cursor:pointer;padding:0;">&#128465;</button></td>
+                </tr>`
+            })
+        }
+
+        function HideShowDashboardCalendar(str)
+        {
+            if (str == "calendar") {
+                document.getElementById("calendarTable").style.display = "block";
+                document.getElementById("dashboard").style.display = "none";
+
+            } else if(str == "dashboard"){
+                document.getElementById("calendarTable").style.display = "none";
+                document.getElementById("dashboard").style.display = "block";
+                loadAppointmentDetails();
+            }
+        }
+
+        function filter(){
+            let searchpatient = document.getElementById("searchpatient").value.toLowerCase();
+            let searchdoctor = document.getElementById("searchdoctor").value.toLowerCase();
+            let fromDate = document.getElementById("searchdatefrom").value;
+            let toDate = document.getElementById("searchdateto").value;
+
+            /*let f=Patientdetails.filter(a=>a.PatientName.toLowerCase().startsWith(searchpatient)&&a.DoctorName.toLowerCase().startsWith(searchdoctor));
+            loadfilteredAppointmentDetails(f);*/
+            let filtered = Patientdetails.filter(a => {
+
+            let patientMatch = a.PatientName.toLowerCase().startsWith(searchpatient);
+            let doctorMatch = a.DoctorName.toLowerCase().startsWith(searchdoctor);
+
+            let dateMatch = true;
+
+            if (fromDate && toDate) {
+                dateMatch = a.AppointmentDate >= fromDate && a.AppointmentDate <= toDate;
+            } else if (fromDate) {
+                dateMatch = a.AppointmentDate >= fromDate;
+            } else if (toDate) {
+                dateMatch = a.AppointmentDate <= toDate;
+            }
+
+            return patientMatch && doctorMatch && dateMatch;
+        });
+
+        loadAppointmentDetails(filtered);
+        }
+
+
+        
+        
+        /*function loadfilteredAppointmentDetails(list) {
+            let appDetails = document.getElementById("AppointmentDetailsBody");
+            appDetails.innerHTML = "";
+
+            list.forEach((a, rownum) => {
+                appDetails.innerHTML += `<tr>                    
+                    <td>${a.PatientName}</td>
+                    <td>${a.DoctorName}</td>
+                    <td>${a.HospitalName}</td>
+                    <td>${a.Specialty}</td>
+                    <td>${a.AppointmentDate}</td>
+                    <td>${a.Time}</td>
+                    <td>
+                        <button onclick="edit(${rownum})">✏️</button>
+                        <button onclick="del(${rownum})">🗑️</button>
+                    </td>
+                </tr>`;
+            });
+        } */
+
+        function del(i){
+            Patientdetails.splice(i,1);
+            localStorage.setItem('Patientdetails',JSON.stringify(Patientdetails));
+            alert('Appointment deleted successfully');
+            loadAppointmentDetails();
+            loadCalendar();
+        }
+
+        function edit(i){
+        let a = Patientdetails[i];
+
+        document.getElementById("PatientName").value = a.PatientName;
+        document.getElementById("DoctorName").value = a.DoctorName;
+        document.getElementById("HospitalName").value = a.HospitalName;
+        document.getElementById("Specialty").value = a.Specialty;
+        document.getElementById("AppointmentDate").value = a.AppointmentDate;
+        document.getElementById("Time").value = a.Time;
+        document.getElementById("Reason").value = a.Reason;
+
+        editIndex = i; 
+        showhideAppointment();
+
+        }
+
+        function changeMonth(v){
+            currentDate.setMonth(currentDate.getMonth()+v);loadCalendar()
+        }
+
+        function goToToday() {
+            currentDate = new Date();
+            loadCalendar();
+        }
+
+    </script>
+</body>
+</html>
